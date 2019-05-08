@@ -2,7 +2,6 @@ import axios from "axios";
 import React, { Component } from "react"; // new
 import ReactDOM from "react-dom";
 import UsersList from "./components/UsersList";
-
 class App extends Component {
   constructor(props) {
     super(props);
