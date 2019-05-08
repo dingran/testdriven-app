@@ -1,10 +1,11 @@
 import axios from "axios";
 import React, { Component } from "react"; // new
 import ReactDOM from "react-dom";
+import UsersList from "./components/UsersList";
 
 class App extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       users: [],
     };
@@ -32,6 +33,7 @@ class App extends Component {
               <h1 className="title is-1">All Users</h1>
               <hr />
               <br />
+              <UsersList users={this.state.users} />
             </div>
           </div>
         </div>
