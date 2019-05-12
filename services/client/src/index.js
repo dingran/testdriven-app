@@ -15,14 +15,17 @@ class App extends Component {
     this.addUser = this.addUser.bind(this); // new
     this.handleChange = this.handleChange.bind(this);
   }
+
   componentDidMount() {
     this.getUsers();
   }
+
   handleChange(event) {
     const obj = {};
     obj[event.target.name] = event.target.value;
     this.setState(obj);
   }
+
   getUsers() {
     axios
       .get(`${process.env.REACT_APP_USERS_SERVICE_URL}/users`) // new
@@ -33,6 +36,7 @@ class App extends Component {
         console.log(err);
       });
   }
+
   addUser(event) {
     event.preventDefault();
     // new
@@ -43,7 +47,7 @@ class App extends Component {
     // new
     axios
       .post(`${process.env.REACT_APP_USERS_SERVICE_URL}/users`, data)
-      .then(res => {
+      .then(() => {
         this.getUsers();
         this.setState({ username: "", email: "" });
       })
@@ -51,6 +55,7 @@ class App extends Component {
         console.log(err);
       });
   }
+
   render() {
     return (
       <section className="section">
@@ -78,4 +83,5 @@ class App extends Component {
     );
   }
 }
+
 ReactDOM.render(<App />, document.getElementById("root"));
