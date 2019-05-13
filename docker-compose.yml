@@ -12,6 +12,7 @@ services:
       - 3007:3000
     environment:
       - NODE_ENV=development
+      # export REACT_APP_USERS_SERVICE_URL=http://localhost
       - REACT_APP_USERS_SERVICE_URL=${REACT_APP_USERS_SERVICE_URL}
     depends_on:
       - users
@@ -27,12 +28,13 @@ services:
     environment:
       - FLASK_ENV=development
       - APP_SETTINGS=project.config.DevelopmentConfig
-      - DATABASE_URL=postgres://postgres:postgres@users-db:5432/users_dev # new
-      - DATABASE_TEST_URL=postgres://postgres:postgres@users-db:5432/users_test # new
+      - DATABASE_URL=postgres://postgres:postgres@users-db:5432/users_dev
+      - DATABASE_TEST_URL=postgres://postgres:postgres@users-db:5432/users_test
+      - SECRET_KEY=my_precious
     depends_on: # new
       - users-db
 
-  users-db: # new
+  users-db:
     build:
       context: ./services/users/project/db
       dockerfile: Dockerfile
