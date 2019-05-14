@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import { Route, Switch } from "react-router-dom";
 import UsersList from "./components/UsersList";
 import AddUser from "./components/AddUser";
+import Form from "./components/Form";
 import About from "./components/About";
 import NavBar from "./components/NavBar";
 
@@ -14,6 +15,11 @@ class App extends Component {
       username: "",
       email: "",
       title: "TestDriven.io",
+      formData: {
+        username: "",
+        email: "",
+        password: "",
+      },
     };
     this.addUser = this.addUser.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -62,6 +68,23 @@ class App extends Component {
               <div className="column is-half">
                 <br />
                 <Switch>
+                  <Route
+                    exact
+                    path="/register"
+                    render={() => (
+                      <Form
+                        formType={"Register"}
+                        formData={this.state.formData}
+                      />
+                    )}
+                  />
+                  <Route
+                    exact
+                    path="/login"
+                    render={() => (
+                      <Form formType={"Login"} formData={this.state.formData} />
+                    )}
+                  />
                   <Route
                     exact
                     path="/"
