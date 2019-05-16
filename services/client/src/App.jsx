@@ -7,6 +7,7 @@ import Form from "./components/Form";
 import About from "./components/About";
 import Logout from "./components/Logout";
 import NavBar from "./components/NavBar";
+import UserStatus from "./components/UserStatus";
 
 class App extends Component {
   constructor() {
@@ -114,7 +115,10 @@ class App extends Component {
   render() {
     return (
       <div>
-        <NavBar title={this.state.title} />
+        <NavBar
+          title={this.state.title}
+          isAuthenticated={this.state.isAuthenticated}
+        />
         <section className="section">
           <div className="container">
             <div className="columns">
@@ -153,6 +157,15 @@ class App extends Component {
                         formData={this.state.formData}
                         handleUserFormSubmit={this.handleUserFormSubmit}
                         handleFormChange={this.handleFormChange}
+                        isAuthenticated={this.state.isAuthenticated}
+                      />
+                    )}
+                  />
+                  <Route
+                    exact
+                    path="/status"
+                    render={() => (
+                      <UserStatus
                         isAuthenticated={this.state.isAuthenticated}
                       />
                     )}
