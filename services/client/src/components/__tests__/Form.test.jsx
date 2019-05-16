@@ -1,6 +1,7 @@
 import React from "react";
 import { shallow } from "enzyme";
 import renderer from "react-test-renderer";
+import { MemoryRouter, Switch, Redirect } from "react-router-dom";
 
 import Form from "../Form";
 
@@ -13,6 +14,9 @@ const testData = [
       email: "",
       password: "",
     },
+    handleUserFormSubmit: jest.fn(),
+    handleFormChange: jest.fn(),
+    isAuthenticated: false,
   },
   {
     formType: "Login",
@@ -21,18 +25,15 @@ const testData = [
       email: "",
       password: "",
     },
+    handleUserFormSubmit: jest.fn(),
+    handleFormChange: jest.fn(),
+    isAuthenticated: false,
   },
 ];
 
 describe("When not authenticated", () => {
   testData.forEach(el => {
-    const component = (
-      <Form
-        formType={el.formType}
-        formData={el.formData}
-        isAuthenticated={false}
-      />
-    );
+    const component = <Form {...el} />;
     it(`${el.formType} Form renders properly`, () => {
       const wrapper = shallow(component);
       const h1 = wrapper.find("h1");
@@ -44,6 +45,17 @@ describe("When not authenticated", () => {
         Object.keys(el.formData)[0],
       );
       expect(formGroup.get(0).props.children.props.value).toBe("");
+    });
+    it(`${el.formType} Form submits the form properly`, () => {
+      const wrapper = shallow(component);
+      const input = wrapper.find('input[type="email"]');
+      expect(el.handleUserFormSubmit).toHaveBeenCalledTimes(0);
+      expect(el.handleFormChange).toHaveBeenCalledTimes(0);
+      input.simulate("change");
+      expect(el.handleFormChange).toHaveBeenCalledTimes(1);
+      wrapper.find("form").simulate("submit", el.formData);
+      expect(el.handleUserFormSubmit).toHaveBeenCalledWith(el.formData);
+      expect(el.handleUserFormSubmit).toHaveBeenCalledTimes(1);
     });
     it(`${el.formType} Form renders a snapshot properly`, () => {
       const tree = renderer.create(component).toJSON();
@@ -65,26 +77,5 @@ describe("When authenticated", () => {
       const wrapper = shallow(component);
       expect(wrapper.find("Redirect")).toHaveLength(1);
     });
-  });
-});
-
-describe("When not authenticated", () => {
-  const testValues = {
-    formType: "Register",
-    formData: {
-      username: "",
-      email: "",
-      password: "",
-    },
-    handleUserFormSubmit: jest.fn(),
-    handleFormChange: jest.fn(),
-    isAuthenticated: false,
-  };
-  const component = <Form {...testValues} />;
-  it(`${testValues.formType} Form submits the form properly`, () => {
-    const wrapper = shallow(component);
-    expect(testValues.handleUserFormSubmit).toHaveBeenCalledTimes(0);
-    wrapper.find("form").simulate("submit");
-    expect(testValues.handleUserFormSubmit).toHaveBeenCalledTimes(1);
   });
 });
