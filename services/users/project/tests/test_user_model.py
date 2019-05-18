@@ -2,7 +2,6 @@ import unittest
 
 from sqlalchemy.exc import IntegrityError
 
-from project import db
 from project.api.models import User
 from project.tests.base import BaseTestCase
 from project.tests.utils import add_user
@@ -13,32 +12,23 @@ PASSWORD = 'greaterthaneight'
 class TestUserModel(BaseTestCase):
 
     def test_add_user(self):
-        user = add_user('justatest', 'test@test.com', PASSWORD)
+        user = add_user('justatest', 'test@test.com', 'test')
         self.assertTrue(user.id)
         self.assertEqual(user.username, 'justatest')
         self.assertEqual(user.email, 'test@test.com')
         self.assertTrue(user.active)
         self.assertTrue(user.password)
+        self.assertFalse(user.admin)
 
     def test_add_user_duplicate_username(self):
         add_user('justatest', 'test@test.com', PASSWORD)
-        duplicate_user = User(
-            username='justatest',
-            email='test@test2.com',
-            password=PASSWORD
-        )
-        db.session.add(duplicate_user)
-        self.assertRaises(IntegrityError, db.session.commit)
+        with self.assertRaises(IntegrityError):
+            add_user('justatest', 'test2@test.com', PASSWORD)
 
     def test_add_user_duplicate_email(self):
         add_user('justatest', 'test@test.com', PASSWORD)
-        duplicate_user = User(
-            username='justatest2',
-            email='test@test.com',
-            password=PASSWORD
-        )
-        db.session.add(duplicate_user)
-        self.assertRaises(IntegrityError, db.session.commit)
+        with self.assertRaises(IntegrityError):
+            add_user('justatest2', 'test@test.com', PASSWORD)
 
     def test_to_json(self):
         user = add_user('justatest', 'test@test.com', PASSWORD)
