@@ -80,7 +80,7 @@ def login_user():
 
 @auth_blueprint.route('/auth/logout', methods=['GET'])
 @authenticate
-def logout_user(resp):
+def logout_user(use_id):
     response_object = {
         'status': 'success',
         'message': 'Successfully logged out.'
@@ -90,11 +90,14 @@ def logout_user(resp):
 
 @auth_blueprint.route('/auth/status', methods=['GET'])
 @authenticate
-def get_user_status(resp):
-    user = User.query.filter_by(id=resp).first()
+def get_user_status(user_id):
+    user = User.query.filter_by(id=user_id).first()
     response_object = {
         'status': 'success',
         'message': 'success',
         'data': user.to_json()
     }
+    # note to self
+    # flask require view func's first return value to be string or Response
+    # otherwise it considers it is a WSGI callable
     return jsonify(response_object), 200

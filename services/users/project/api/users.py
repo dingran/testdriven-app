@@ -1,6 +1,6 @@
 from flask import Blueprint, request, render_template
 from flask_restful import Resource, Api
-from sqlalchemy import exc
+from sqlalchemy import exc, or_
 from project import db
 from project.api.models import User
 from project.api.utils import authenticate_restful, is_admin
@@ -37,17 +37,23 @@ class UsersList(Resource):
         email = post_data.get('email')
         password = post_data.get('password')
         try:
-            user = User.query.filter_by(email=email).first()
+            # check for existing user
+            user = User.query.filter(
+                or_(User.username == username, User.email == email)).first()
             if not user:
-                db.session.add(
-                    User(username=username, email=email, password=password))
+                # add new user to db
+                new_user = User(
+                    username=username,
+                    email=email,
+                    password=password
+                )
+                db.session.add(new_user)
                 db.session.commit()
                 response_object['status'] = 'success'
                 response_object['message'] = f'{email} was added!'
                 return response_object, 201
             else:
-                response_object[
-                    'message'] = 'Sorry. That email already exists.'
+                response_object['message'] = 'Sorry. That user already exists.'
                 return response_object, 400
         except (exc.IntegrityError, ValueError):
             db.session.rollback()
@@ -61,6 +67,8 @@ class UsersList(Resource):
                 'users': [user.to_json() for user in User.query.all()]
             }
         }
+        # note to self
+        # no need to jsonify here, because make_response happens in Resource
         return response_object, 200
 
 
