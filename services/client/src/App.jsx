@@ -21,7 +21,9 @@ class App extends Component {
         email: "",
         password: "",
       },
-      isAuthenticated: false,
+      //TODO: if we set isAuthenticated to false, navigate to /status vs clicking status yield different results
+      isAuthenticated: window.localStorage.getItem("authToken") ? true : false,
+      //isAuthenticated: false,
     };
     this.addUser = this.addUser.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -68,6 +70,7 @@ class App extends Component {
     this.setState(obj);
   }
 
+  //TODO: why after form submission, we arrive at root / automatically?
   handleUserFormSubmit(event) {
     event.preventDefault();
     const formType = window.location.href.split("/").reverse()[0];
@@ -85,7 +88,7 @@ class App extends Component {
         this.clearFormState();
         window.localStorage.setItem("authToken", res.data.auth_token);
         this.setState({ isAuthenticated: true });
-        console.log(this.state);
+        this.getUsers();
       })
       .catch(err => {
         console.log(err);
