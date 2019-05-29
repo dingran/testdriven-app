@@ -21,9 +21,10 @@ class App extends Component {
         email: "",
         password: "",
       },
-      //TODO: if we set isAuthenticated to false, navigate to /status vs clicking status yield different results
+      //TODO: if we set isAuthenticated to false, navigate to /status in browser
+      // vs clicking status yield different results
       isAuthenticated: window.localStorage.getItem("authToken") ? true : false,
-      //isAuthenticated: false,
+      // isAuthenticated: false,
     };
     this.addUser = this.addUser.bind(this);
     this.handleChange = this.handleChange.bind(this);
