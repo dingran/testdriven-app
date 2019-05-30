@@ -1,5 +1,4 @@
 import React from "react";
-// import { shallow } from "enzyme";
 import App from "../../App";
 
 import { shallow, mount } from "enzyme";
@@ -12,13 +11,13 @@ beforeAll(() => {
 });
 
 test("App renders without crashing", () => {
-  const wrapper = shallow(<App />);
+  shallow(<App />);
 });
 
 test("App will call componentWillMount when mounted", () => {
   const onWillMount = jest.fn();
   App.prototype.componentWillMount = onWillMount;
-  const wrapper = mount(
+  mount(
     <Router>
       <App />
     </Router>,
