@@ -5,20 +5,12 @@
     "title": "Users Service",
     "description": "Swagger spec for documenting the users service"
   },
-  "servers": [
-    {
-      "url": "http://localhost"
-    }
-  ],
+  "servers": [{ "url": "http://3.81.16.244" }],
   "paths": {
     "/users/ping": {
       "get": {
         "summary": "Just a sanity check",
-        "responses": {
-          "200": {
-            "description": "Will return 'pong!'"
-          }
-        }
+        "responses": { "200": { "description": "Will return 'pong!'" } }
       }
     },
     "/users/{id}": {
@@ -30,17 +22,10 @@
             "in": "path",
             "description": "ID of user to fetch",
             "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
+            "schema": { "type": "integer", "format": "int64" }
           }
         ],
-        "responses": {
-          "200": {
-            "description": "user object"
-          }
-        }
+        "responses": { "200": { "description": "user object" } }
       }
     },
     "/auth/register": {
@@ -51,17 +36,11 @@
           "required": true,
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/user-full"
-              }
+              "schema": { "$ref": "#/components/schemas/user-full" }
             }
           }
         },
-        "responses": {
-          "200": {
-            "description": "user object"
-          }
-        }
+        "responses": { "200": { "description": "user object" } }
       }
     },
     "/auth/login": {
@@ -72,57 +51,31 @@
           "required": true,
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/user"
-              }
+              "schema": { "$ref": "#/components/schemas/user" }
             }
           }
         },
-        "responses": {
-          "200": {
-            "description": "Successfully logged in"
-          }
-        }
+        "responses": { "200": { "description": "Successfully logged in" } }
       }
     },
     "/auth/status": {
       "get": {
         "summary": "Returns the logged in user's status",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "user object"
-          }
-        }
+        "security": [{ "bearerAuth": [] }],
+        "responses": { "200": { "description": "user object" } }
       }
     },
     "/auth/logout": {
       "get": {
         "summary": "Logs a user out",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successfully logged out"
-          }
-        }
+        "security": [{ "bearerAuth": [] }],
+        "responses": { "200": { "description": "Successfully logged out" } }
       }
     },
     "/users": {
       "get": {
         "summary": "Returns all users",
-        "responses": {
-          "200": {
-            "description": "user object"
-          }
-        }
+        "responses": { "200": { "description": "user object" } }
       },
       "post": {
         "summary": "Adds a new user",
@@ -131,54 +84,29 @@
           "required": true,
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/user-full"
-              }
+              "schema": { "$ref": "#/components/schemas/user-full" }
             }
           }
         },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "User added"
-          }
-        }
+        "security": [{ "bearerAuth": [] }],
+        "responses": { "200": { "description": "User added" } }
       }
     }
   },
   "components": {
-    "securitySchemes": {
-      "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer"
-      }
-    },
+    "securitySchemes": { "bearerAuth": { "type": "http", "scheme": "bearer" } },
     "schemas": {
       "user": {
         "properties": {
-          "email": {
-            "type": "string"
-          },
-          "password": {
-            "type": "string"
-          }
+          "email": { "type": "string" },
+          "password": { "type": "string" }
         }
       },
       "user-full": {
         "properties": {
-          "username": {
-            "type": "string"
-          },
-          "email": {
-            "type": "string"
-          },
-          "password": {
-            "type": "string"
-          }
+          "username": { "type": "string" },
+          "email": { "type": "string" },
+          "password": { "type": "string" }
         }
       }
     }
