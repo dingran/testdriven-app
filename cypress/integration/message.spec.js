@@ -77,10 +77,8 @@ describe("Message", () => {
       .wait(100);
 
     // assert flash message is removed after three seconds
-    cy.get(".notification.is-success")
-      .contains("Welcome!")
-      .wait(4000)
-      .get(".notification.is-success")
-      .should("not.be.visible");
+    cy.get(".notification.is-success").contains("Welcome!");
+    cy.wait(4000);
+    cy.get(".notification.is-success").should("not.be.visible");
   });
 });
