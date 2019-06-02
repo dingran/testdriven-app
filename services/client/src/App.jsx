@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { Component } from "react";
 import { Route, Switch } from "react-router-dom";
 import UsersList from "./components/UsersList";
-import Form from "./components/Form";
+import Form from "./components/forms/Form";
 import About from "./components/About";
 import Logout from "./components/Logout";
 import NavBar from "./components/NavBar";

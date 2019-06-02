@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import axios from "axios";
 import { Redirect } from "react-router-dom";
+import { registerFormRules, loginFormRules } from "./form-rules.js";
+import FormErrors from "./FormErrors.jsx";
 
 class Form extends Component {
   constructor(props) {
@@ -11,16 +13,46 @@ class Form extends Component {
         email: "",
         password: "",
       },
+      registerFormRules: registerFormRules, // new
+      loginFormRules: loginFormRules, // new
+      valid: false,
     };
     this.handleUserFormSubmit = this.handleUserFormSubmit.bind(this);
     this.handleFormChange = this.handleFormChange.bind(this);
   }
+  allTrue() {
+    let formRules = loginFormRules;
+    if (this.props.formType === "Register") {
+      formRules = registerFormRules;
+    }
+    for (const rule of formRules) {
+      if (!rule.valid) return false;
+    }
+    return true;
+  }
+  resetRules() {
+    const registerFormRules = this.state.registerFormRules;
+    for (const rule of registerFormRules) {
+      rule.valid = false;
+    }
+    this.setState({ registerFormRules: registerFormRules });
+
+    const loginFormRules = this.state.loginFormRules;
+    for (const rule of loginFormRules) {
+      rule.valid = false;
+    }
+    this.setState({ loginFormRules: loginFormRules });
+
+    this.setState({ valid: false });
+  }
   componentDidMount() {
     this.clearForm();
+    this.validateForm();
   }
   // componentWillReceiveProps(nextProps) {
   //   if (this.props.formType !== nextProps.formType) {
   //     this.clearForm();
+  //     this.validateForm(); // new
   //   }
   // }
   clearForm() {
@@ -28,10 +60,42 @@ class Form extends Component {
       formData: { username: "", email: "", password: "" },
     });
   }
+  validateForm() {
+    // define self as this
+    const self = this;
+    // get form data
+    const formData = this.state.formData;
+    // reset all rules
+    self.resetRules();
+    // validate register form
+    if (self.props.formType === "Register") {
+      const formRules = self.state.registerFormRules;
+      if (formData.username.length > 5) formRules[0].valid = true;
+      if (formData.email.length > 5) formRules[1].valid = true;
+      if (this.validateEmail(formData.email)) formRules[2].valid = true;
+      if (formData.password.length > 10) formRules[3].valid = true;
+      self.setState({ registerFormRules: formRules });
+      if (self.allTrue()) self.setState({ valid: true });
+    }
+    // validate login form
+    if (self.props.formType === "Login") {
+      const formRules = self.state.loginFormRules;
+      if (formData.email.length > 0) formRules[0].valid = true;
+      if (formData.password.length > 0) formRules[1].valid = true;
+      self.setState({ loginFormRules: formRules });
+      if (self.allTrue()) self.setState({ valid: true });
+    }
+  }
+  validateEmail(email) {
+    // eslint-disable-next-line
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email);
+  }
   handleFormChange(event) {
     const obj = this.state.formData;
     obj[event.target.name] = event.target.value;
     this.setState(obj);
+    this.validateForm();
   }
   handleUserFormSubmit(event) {
     event.preventDefault();
@@ -60,6 +124,10 @@ class Form extends Component {
     if (this.props.isAuthenticated) {
       return <Redirect to="/" />;
     }
+    let formRules = this.state.loginFormRules;
+    if (this.props.formType === "Register") {
+      formRules = this.state.registerFormRules;
+    }
     return (
       <div>
         {this.props.formType === "Login" && (
@@ -70,6 +138,7 @@ class Form extends Component {
         )}
         <hr />
         <br />
+        <FormErrors formType={this.props.formType} formRules={formRules} />
         <form onSubmit={event => this.handleUserFormSubmit(event)}>
           {this.props.formType === "Register" && (
             <div className="field">
@@ -110,6 +179,7 @@ class Form extends Component {
             type="submit"
             className="button is-primary is-medium is-fullwidth"
             value="Submit"
+            disabled={!this.state.valid}
           />
         </form>
       </div>

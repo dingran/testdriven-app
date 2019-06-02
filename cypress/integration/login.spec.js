@@ -1,5 +1,5 @@
+const password = "greaterthanten";
 const randomstring = require("randomstring");
-
 const username = randomstring.generate();
 const email = `${username}@test.com`;
 
@@ -10,8 +10,14 @@ describe("Login", () => {
     cy.visit("/login")
       .get("h1")
       .contains("Log In")
-      .get("form");
+      .get("form")
+      .get("input[disabled]")
+      .get(".validation-list") // new
+      .get(".validation-list > .error")
+      .first()
+      .contains("Email is required."); // new
   });
+
   it("should allow a user to sign in", () => {
     // register user
     cy.visit("/register")
@@ -20,7 +26,7 @@ describe("Login", () => {
       .get('input[name="email"]')
       .type(email)
       .get('input[name="password"]')
-      .type("test")
+      .type(password)
       .get('input[type="submit"]')
       .click();
 
@@ -35,10 +41,11 @@ describe("Login", () => {
       .get('input[name="email"]')
       .type(email)
       .get('input[name="password"]')
-      .type("test")
+      .type(password)
       .get('input[type="submit"]')
-      .click()
-      .wait(100);
+      .click();
+
+    cy.wait(100);
 
     // assert user is redirected to '/'
     // assert '/' is displayed properly

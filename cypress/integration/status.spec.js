@@ -1,5 +1,5 @@
+const password = "greaterthanten";
 const randomstring = require("randomstring");
-
 const username = randomstring.generate();
 const email = `${username}@test.com`;
 
@@ -27,13 +27,13 @@ describe("Status", () => {
       .get('input[name="email"]')
       .type(email)
       .get('input[name="password"]')
-      .type("test")
+      .type(password)
       .get('input[type="submit"]')
       .click()
       .get(".navbar-burger")
       .click();
 
-    cy.wait(500);
+    cy.wait(100);
 
     // assert '/status' is displayed properly
     cy.visit("/status");
