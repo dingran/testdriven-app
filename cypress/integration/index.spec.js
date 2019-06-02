@@ -14,6 +14,8 @@ describe("Index", () => {
       .get("a")
       .contains("Register")
       .get("a")
-      .contains("Log In");
+      .contains("Log In")
+      .get(".notification.is-success")
+      .should("not.be.visible"); // new
   });
 });
